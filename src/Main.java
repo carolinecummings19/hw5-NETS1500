@@ -1,18 +1,26 @@
+import java.io.File;
 import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
+        // Call scraper(s)
+        String folderPath = "recipes/keto";
+        File folder = new File(folderPath);
+
+        if (!folder.exists() || folder.listFiles() == null || folder.listFiles().length == 0) {
+            System.out.println("Recipes folder is empty or does not exist. Starting scrape...");
+            RecipeScraper.getVeganRecipes();
+            RecipeScraper.getVegetarianRecipes();
+            RecipeScraper.getGlutenFreeRecipes();
+            RecipeScraper.getKetoRecipes();
+            RecipeScraper.getKosherRecipes();
+        } else {
+            System.out.println("Recipes folder already populated. Skipping scrape.");
+        }
+
         // Create a Scanner to enable interactivity
         Scanner scanner = new Scanner(System.in);
         System.out.println("Hello!");
-
-        //list to keep track of the foods that the user would like to avoid
-        List<String> foodsToAvoid = new ArrayList<>();
-
-        //map of diets with the ingredients to avoid
-        Map<String, List<String>> diets = new HashMap<>();
-        diets.put("vegan", Arrays.asList("meat", "fish", "eggs", "milk", "animal derived ingredients"));
-        diets.put("gluten free", Arrays.asList("wheat", "barley", "rye", "triticale", "pasta"));
 
         //asking the user if they have dietary restrictions
         System.out.println("Do you have any dietary restrictions? (y/n)");
@@ -20,34 +28,40 @@ public class Main {
 
         //if the user has dietary restrictions, ask them to specify
         if(answer.equals("y") || answer.equals("yes")){
-            System.out.println("Please specify");
-            answer = scanner.nextLine().toLowerCase();
-            String[] answerComponents = splitIntoParts(answer);
+            System.out.println("Please specify: ");
+            System.out.println("1. Vegetarian");
+            System.out.println("2. Gluten-Free");
+            System.out.println("3. Keto");
+            System.out.println("4. Vegan");
+            System.out.println("5. Kosher");
+            System.out.print("Your choice: ");
 
-            for(String part: answerComponents) {
-                while (!diets.containsKey(part) && part != null) {
-                    part = doNotUnderstand(part, scanner);
-                }
-
-                if (part != null) {
-                    System.out.println("You said " + part + " so we are assuming you would like to avoid: ");
-                    foodsToAvoid.addAll(diets.get(part));
-                    printList(foodsToAvoid);
-                }
+            int choice = -1;
+            try {
+                choice = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Skipping dietary restrictions.");
             }
 
-            System.out.println("Would you like to add any other foods to the list? (y/n)");
-            answer = scanner.nextLine();
-            while(answer.equals("y") || answer.equals("yes")){
-                System.out.println("What other food would you like to avoid?");
-                answer = scanner.nextLine();
-                foodsToAvoid.add(answer);
-                printList(foodsToAvoid);
-                System.out.println("Would you like to add any other foods to the list? (y/n)");
-                answer = scanner.nextLine();
+            switch (choice) {
+                case 1:
+                    System.out.println("You selected Vegetarian.");
+                    break;
+                case 2:
+                    System.out.println("You selected Gluten-Free.");
+                    break;
+                case 3:
+                    System.out.println("You selected Keto.");
+                    break;
+                case 4:
+                    System.out.println("You selected Vegan.");
+                    break;
+                case 5:
+                    System.out.println("You selected Kosher.");
+                    break;
+                default:
+                    System.out.println("Invalid selection. Skipping dietary restrictions.");
             }
-
-
         }
 
         System.out.println("What ingredients would you like to use?\nPlease separate each ingredient with a comma");
@@ -63,7 +77,6 @@ public class Main {
         for(String ingredient: ingredientList){
             System.out.println(" - " + ingredient);
         }
-
 
     }
 
@@ -96,7 +109,7 @@ public class Main {
             if(answerComponents[i].charAt(answerComponents[i].length() -1) == ' '){
                 answerComponents[i] = answerComponents[i].substring(0,answerComponents[i].length()-1);
             }
-            System.out.println(answerComponents[i]);
+//            System.out.println(answerComponents[i]);
         }
         return answerComponents;
     }
