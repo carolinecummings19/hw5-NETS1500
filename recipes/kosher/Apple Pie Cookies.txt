@@ -20,3 +20,11 @@ Directions:
 
 Nutrition Facts:
 159 Calories 10g Fat 15g Carbs 2g Protein 
+
+Recipe Details:
+Prep Time: 30 mins
+Cook Time: 25 mins
+Additional Time: 5 mins
+Total Time: 1 hr
+Servings: 24
+Yield: 24 cookies

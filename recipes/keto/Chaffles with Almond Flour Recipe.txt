@@ -12,3 +12,11 @@ Directions:
 
 Nutrition Facts:
 132 Calories 9g Fat 2g Carbs 11g Protein 
+
+Recipe Details:
+Prep Time: 5 mins
+Cook Time: 10 mins
+Additional Time: 5 mins
+Total Time: 20 mins
+Servings: 2
+Yield: 2 4-inch chaffles

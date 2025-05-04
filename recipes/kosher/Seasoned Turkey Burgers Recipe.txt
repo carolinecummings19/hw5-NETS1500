@@ -14,3 +14,11 @@ Directions:
 
 Nutrition Facts:
 315 Calories 11g Fat 25g Carbs 28g Protein 
+
+Recipe Details:
+Prep Time: 10 mins
+Cook Time: 20 mins
+Additional Time: 10 mins
+Total Time: 40 mins
+Servings: 6
+Yield: 6 burgers

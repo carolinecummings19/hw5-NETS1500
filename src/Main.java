@@ -1,3 +1,7 @@
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.io.File;
 import java.lang.reflect.Array;
 import java.util.*;
@@ -6,19 +10,40 @@ import java.util.stream.Collectors;
 public class Main {
     public static void main(String[] args) {
         // Call scraper(s)
-        String folderPath = "recipes/keto";
+        String folderPath = "recipes";
         File folder = new File(folderPath);
 
-        if (!folder.exists() || folder.listFiles() == null || folder.listFiles().length == 0) {
-            System.out.println("Recipes folder is empty or does not exist. Starting scrape...");
-            RecipeScraper.getVeganRecipes();
-            RecipeScraper.getVegetarianRecipes();
-            RecipeScraper.getGlutenFreeRecipes();
-            RecipeScraper.getKetoRecipes();
-            RecipeScraper.getKosherRecipes();
-        } else {
-            System.out.println("Recipes folder already populated. Skipping scrape.");
-        }
+        String[] subfolderPaths = {"recipes/vegan","recipes/vegetarian","recipes/glutenfree","recipes/keto","recipes/kosher"};
+
+        //if (!folder.exists() || folder.listFiles() == null || folder.listFiles().length == 0) {
+              //  System.out.println("Recipes folder is empty or does not exist. Starting scrape...");
+
+            for(String subfolderPath : subfolderPaths){
+                File subfolder = new File("recipes/vegan");
+
+                if(!subfolder.exists() || subfolder.listFiles() == null || subfolder.listFiles().length == 0) {
+                    if (subfolderPath.contains("vegan")) {
+                        RecipeScraper.getVeganRecipes();
+                    }
+                    if (subfolderPath.contains("vegetarian")) {
+                        RecipeScraper.getVegetarianRecipes();
+                    }
+                    if (subfolderPath.contains("glutenfree")) {
+                        RecipeScraper.getGlutenFreeRecipes();
+                    }
+                    if (subfolderPath.contains("keto")) {
+                        RecipeScraper.getKetoRecipes();
+                    }
+                    if (subfolderPath.contains("kosher")) {
+                        RecipeScraper.getKosherRecipes();
+                    }
+                } else{
+                    System.out.println(subfolderPath + " folder exists, skipping scrape");
+                }
+            }
+        //} else {
+          //System.out.println("Recipes folder already populated. Skipping scrape.");
+        //}
 
         // Create a Scanner to enable interactivity
         Scanner scanner = new Scanner(System.in);
@@ -102,6 +127,21 @@ public class Main {
             printList(entry.getKey().getIngredientsMissing());
         }
 
+        //Recipe details -- prep time, cook time, and servings
+        //Document recipePage = RecipeScraper.fetchPage("https://www.allrecipes.com/pickle-bacon-chopped-bagels-recipe-11719063");
+        //Elements cookingTime = recipePage.select("div[class=mm-recipes-details__content]");
+        //Elements cookingTime = recipePage.select("div[class=mm-recipes-details__item]");
+        /*
+        if (cookingTime != null) {
+            for (Element fact : cookingTime) {
+                if (fact.hasText()) {
+                    System.out.println(fact.text());
+                }
+            }
+        } else {
+            System.out.println("not found");
+        }
+         */
 
         //TESTING A SINGLE FILE
         /*

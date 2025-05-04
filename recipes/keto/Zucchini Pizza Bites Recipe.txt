@@ -14,3 +14,9 @@ Directions:
 
 Nutrition Facts:
 68 Calories 5g Fat 3g Carbs 4g Protein 
+
+Recipe Details:
+Prep Time: 10 mins
+Cook Time: 20 mins
+Total Time: 30 mins
+Servings: 6

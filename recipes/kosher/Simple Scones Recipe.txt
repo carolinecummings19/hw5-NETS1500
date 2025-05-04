@@ -23,3 +23,11 @@ Directions:
 
 Nutrition Facts:
 319 Calories 16g Fat 41g Carbs 5g Protein 
+
+Recipe Details:
+Prep Time: 15 mins
+Cook Time: 15 mins
+Additional Time: 5 mins
+Total Time: 35 mins
+Servings: 8
+Yield: 8 scones

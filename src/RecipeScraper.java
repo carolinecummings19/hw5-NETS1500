@@ -321,6 +321,21 @@ public class RecipeScraper {
                 recipeText.append("Not available\n");
             }
 
+            //Recipe details -- prep time, cook time, and servings
+            recipeText.append("\n\nRecipe Details:\n");
+            Elements recipeDetails = recipePage.select("div[class=mm-recipes-details__item]");
+
+            if (recipeDetails != null) {
+                for (Element detail : recipeDetails) {
+                    if (detail.hasText()) {
+                        recipeText.append(detail.text()).append("\n");
+                    }
+                }
+            } else {
+                recipeText.append("Not available\n");
+            }
+
+
             try (FileWriter writer = new FileWriter(file)) {
                 writer.write(recipeText.toString());
                 System.out.println("Saved recipe: " + file.getPath());

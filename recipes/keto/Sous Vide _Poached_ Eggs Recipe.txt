@@ -9,3 +9,11 @@ Directions:
 
 Nutrition Facts:
 72 Calories 5g Fat 0g Carbs 6g Protein 
+
+Recipe Details:
+Prep Time: 5 mins
+Cook Time: 30 mins
+Additional Time: 5 mins
+Total Time: 40 mins
+Servings: 4
+Yield: 4 eggs

@@ -21,3 +21,11 @@ Directions:
 
 Nutrition Facts:
 182 Calories 5g Fat 34g Carbs 3g Protein 
+
+Recipe Details:
+Prep Time: 20 mins
+Cook Time: 40 mins
+Additional Time: 10 mins
+Total Time: 1 hr 10 mins
+Servings: 36
+Yield: 3 dozen

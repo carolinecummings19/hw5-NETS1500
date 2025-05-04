@@ -22,11 +22,12 @@ Directions:
 - Run "rapid bake" cycle for 2 hours. Select "dark" crust setting; bake for 50 minutes.
 
 Nutrition Facts:
-238
-Calories
-7g
-Fat
-39g
-Carbs
-6g
-Protein
+238 Calories 7g Fat 39g Carbs 6g Protein 
+
+Recipe Details:
+Prep Time: 10 mins
+Cook Time: 50 mins
+Additional Time: 2 hrs
+Total Time: 3 hrs
+Servings: 10
+Yield: 1 loaf
