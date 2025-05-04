@@ -1,5 +1,7 @@
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) {
@@ -21,6 +23,7 @@ public class Main {
         // Create a Scanner to enable interactivity
         Scanner scanner = new Scanner(System.in);
         System.out.println("Hello!");
+        String dietChosen = null;
 
         //asking the user if they have dietary restrictions
         System.out.println("Do you have any dietary restrictions? (y/n)");
@@ -46,18 +49,23 @@ public class Main {
             switch (choice) {
                 case 1:
                     System.out.println("You selected Vegetarian.");
+                    dietChosen = "vegetarian";
                     break;
                 case 2:
                     System.out.println("You selected Gluten-Free.");
+                    dietChosen = "glutenfree";
                     break;
                 case 3:
                     System.out.println("You selected Keto.");
+                    dietChosen = "keto";
                     break;
                 case 4:
                     System.out.println("You selected Vegan.");
+                    dietChosen = "vegan";
                     break;
                 case 5:
                     System.out.println("You selected Kosher.");
+                    dietChosen = "kosher";
                     break;
                 default:
                     System.out.println("Invalid selection. Skipping dietary restrictions.");
@@ -78,6 +86,53 @@ public class Main {
             System.out.println(" - " + ingredient);
         }
 
+        HashMap<RecipeRanking, Double> rankedRecipes = RecipeScraper.rankRecipesByIngredients(Arrays.asList(ingredientList), dietChosen);
+
+
+        List<Map.Entry<RecipeRanking, Double>> sorted = new ArrayList<>(rankedRecipes.entrySet());
+        sorted.sort((e1, e2) -> Double.compare(e2.getValue(), e1.getValue()));
+
+
+        // Print the top 30 results
+        int count = 0;
+        for (Map.Entry<RecipeRanking, Double> entry : sorted) {
+            if (count++ >= 30) break;
+            System.out.println(count + ". " + entry.getKey().getName() + " -> " + entry.getValue());
+            System.out.println("Ingredients missing: ");
+            printList(entry.getKey().getIngredientsMissing());
+        }
+
+
+        //TESTING A SINGLE FILE
+        /*
+        File testFile = new File("/Users/ashleytang/Documents/NETS 1500/hw5-NETS1500/recipes/vegan/ABC Pudding - Avocado, Banana, Chocolate Delight Recipe.txt");
+        List<String> ingredientsInTestRecipe = RecipeScraper.getIngredients(testFile);
+        System.out.println(ingredientsInTestRecipe.size() + " ingredients: " + ingredientsInTestRecipe);
+
+        List<String> desiredIngredients = new ArrayList<>();
+        desiredIngredients.add("avocado");
+        desiredIngredients.add("peach");
+        List<String> ingredientsMatching = desiredIngredients.stream()
+                .filter(full -> ingredientsInTestRecipe.stream().anyMatch(containing -> containing.contains(full)))
+                .collect(Collectors.toList());
+
+        System.out.println("Matching ingredients" + ingredientsMatching);
+
+        //find all ingredients that the user is missing
+        List<String> ingredientsMissing = ingredientsInTestRecipe.stream()
+                .filter(item -> desiredIngredients.stream().noneMatch(item::contains))
+                .collect(Collectors.toList());
+
+        System.out.println("Missing ingredients" + ingredientsMissing);
+
+        //find all ingredients that the user lists but the recipe does not use
+        List<String> ingredientsUnused = desiredIngredients.stream()
+                .filter(full -> ingredientsInTestRecipe.stream().noneMatch(containing -> containing.contains(full)))
+                .collect(Collectors.toList());
+
+        System.out.println("Unused ingredients" + ingredientsUnused);
+
+         */
     }
 
     public static void printList(List<String> list){

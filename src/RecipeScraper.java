@@ -3,9 +3,12 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class RecipeScraper {
     /*
@@ -161,6 +164,84 @@ public class RecipeScraper {
     }
 
     /**
+     * Find ingredients that match the requirements
+     * @param ingredientList
+     * @param diet
+     */
+    public static HashMap<RecipeRanking, Double> rankRecipesByIngredients(List<String> ingredientList, String diet){
+        HashMap<RecipeRanking, Double> rankedRecipes = new HashMap<>();
+        String parentDir = "/Users/ashleytang/Documents/NETS 1500/hw5-NETS1500/recipes";
+        File[] recipesForDiet;
+
+        if(diet != null) {
+            //open the folder matching the diet
+            File folder = new File(parentDir, diet);
+            recipesForDiet = folder.listFiles();
+        } else {
+            File folder = new File(parentDir);
+            File[] subfolders = folder.listFiles();
+            List<File> allFiles = new ArrayList<>();
+            for(File subfolder: subfolders){
+                allFiles.addAll(Arrays.asList(subfolder.listFiles()));
+            }
+            recipesForDiet = allFiles.toArray(new File[0]);
+        }
+
+        //for each recipe, rank the recipes in terms of how many ingredients match from the list
+        for(File recipe: recipesForDiet){
+
+            //keep a count for the number of matching ingredients
+            //int numMatchingIngredients = 0;
+            //List<String> matchingIngredients = new ArrayList<>();
+            List<String> ingredientsInRecipe = getIngredients(recipe);
+
+            //List<String> ingredientsFound = ingredientsUnused.stream().distinct().filter(ingredientList::contains).collect(Collectors.toList());
+
+            //find all ingredients that the user lists and the recipe uses
+            List<String> ingredientsMatching = ingredientList.stream()
+                    .filter(full -> ingredientsInRecipe.stream().anyMatch(containing -> containing.contains(full)))
+                    .collect(Collectors.toList());
+
+            //System.out.println(ingredientsMatching);
+
+            //find all ingredients that the user is missing
+            List<String> ingredientsMissing = ingredientsInRecipe.stream()
+                    .filter(item -> ingredientList.stream().noneMatch(item::contains))
+                    .collect(Collectors.toList());
+
+            //find all ingredients that the user lists but the recipe does not use
+            List<String> ingredientsUnused = ingredientList.stream()
+                    .filter(full -> ingredientsInRecipe.stream().noneMatch(containing -> containing.contains(full)))
+                    .collect(Collectors.toList());
+
+            RecipeRanking recipeRank = new RecipeRanking(recipe.getName(), ingredientsMatching, ingredientsMissing, ingredientsUnused);
+            rankedRecipes.put(recipeRank, recipeRank.calculateScore());
+        }
+
+        return rankedRecipes;
+    }
+
+    public static List<String> getIngredients(File file){
+        List<String> ingredients = new ArrayList<>();
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            String line = reader.readLine();
+            for(int i = 0; i < reader.read(); i++)
+            while(line != null && !line.contains("Directions")){
+                if(!line.contains("Ingredients") && !line.equals("")){
+                    ingredients.add(line);
+                }
+                line = reader.readLine();
+            }
+            //System.out.println(ingredients);
+            reader.close();
+        } catch (IOException e){
+            System.out.println("Error reading file: " + e);
+        }
+        return ingredients;
+    }
+
+    /**
      * Find the recipes from the cards on the page.
      * @param subcategoryUrl
      * @param diet
@@ -178,6 +259,11 @@ public class RecipeScraper {
         }
     }
 
+    /**
+     * Scrapes a recipe and saves it as a .txt file
+     * @param recipeUrl
+     * @param diet
+     */
     private static void scrapeAndSaveRecipe(String recipeUrl, String diet) {
         try {
             Document recipePage = fetchPage(recipeUrl);
