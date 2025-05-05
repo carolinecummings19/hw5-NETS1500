@@ -50,7 +50,7 @@ src/
   Set an upper limit on total time and minimum number of servings.
 
 * **Recipe Ranking**
-  Finds and ranks recipes by how well they match your inputs.
+  Finds and ranks recipes by how well they match your inputs. Uses TF-IDF vector concept and cosine similarities. The vectors used are <1,...,1,1,....,1,0,...,0> and <1,...,1,0,...,0,1,...,1> where the size of the vectors is equal to the total number of ingredients in both recipes. Using the rule of cosine similarities, this can be simplified to (number of matching)/(sqrt(matching + number of unused) + sqrt(number of matching + number of missing)). The closer this value is to 1, the more similar the recipe is to the user's query. 
 
 * **Expandable Results**
   Each result can be expanded/collapsed to view the full recipe, directions, nutrition facts, and missing ingredients.

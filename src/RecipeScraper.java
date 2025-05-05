@@ -277,7 +277,7 @@ public class RecipeScraper {
     public static List<File> filterRecipeDetails(List<String> requirements, String diet){
         List<File> filteredRecipes = new ArrayList<>();
         // Replace with path: /Users/ashleytang/Documents/NETS 1500/hw5-NETS1500/recipes
-        String parentDir = "/Users/carolinesmacbookair/Desktop/NETS 1500/HW5/recipes";
+        String parentDir = "recipes";
         File[] recipesForDiet;
 
         if(diet != null) {
