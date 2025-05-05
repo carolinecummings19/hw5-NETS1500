@@ -4,10 +4,9 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class RecipeScraper {
@@ -168,12 +167,14 @@ public class RecipeScraper {
      * @param ingredientList
      * @param diet
      */
-    public static HashMap<RecipeRanking, Double> rankRecipesByIngredients(List<String> ingredientList, String diet){
+    public static HashMap<RecipeRanking, Double> rankRecipesByIngredients(List<String> ingredientList, String diet, List<File> specificRecipes){
         HashMap<RecipeRanking, Double> rankedRecipes = new HashMap<>();
         String parentDir = "/Users/ashleytang/Documents/NETS 1500/hw5-NETS1500/recipes";
         File[] recipesForDiet;
-
-        if(diet != null) {
+        if(specificRecipes != null){
+            recipesForDiet = specificRecipes.toArray(new File[0]);
+        }
+        else if(diet != null) {
             //open the folder matching the diet
             File folder = new File(parentDir, diet);
             recipesForDiet = folder.listFiles();
@@ -214,7 +215,8 @@ public class RecipeScraper {
                     .filter(full -> ingredientsInRecipe.stream().noneMatch(containing -> containing.contains(full)))
                     .collect(Collectors.toList());
 
-            RecipeRanking recipeRank = new RecipeRanking(recipe.getName(), ingredientsMatching, ingredientsMissing, ingredientsUnused);
+            Map<String, String[]> recipeDetails = getDetails(recipe);
+            RecipeRanking recipeRank = new RecipeRanking(recipe.getName(), ingredientsMatching, ingredientsMissing, ingredientsUnused, recipeDetails);
             rankedRecipes.put(recipeRank, recipeRank.calculateScore());
         }
 
@@ -239,6 +241,130 @@ public class RecipeScraper {
             System.out.println("Error reading file: " + e);
         }
         return ingredients;
+    }
+
+
+    public static List<File> filterRecipeDetails(List<String> requirements, String diet){
+        List<File> filteredRecipes = new ArrayList<>();
+        String parentDir = "/Users/ashleytang/Documents/NETS 1500/hw5-NETS1500/recipes";
+        File[] recipesForDiet;
+
+        if(diet != null) {
+            //open the folder matching the diet
+            File folder = new File(parentDir, diet);
+            recipesForDiet = folder.listFiles();
+        } else {
+            File folder = new File(parentDir);
+            File[] subfolders = folder.listFiles();
+            List<File> allFiles = new ArrayList<>();
+            for(File subfolder: subfolders){
+                allFiles.addAll(Arrays.asList(subfolder.listFiles()));
+            }
+            recipesForDiet = allFiles.toArray(new File[0]);
+        }
+
+        //for each recipe, get the recipe details
+        for(File recipe: recipesForDiet){
+
+            //store the recipe in the filtered recipe
+            filteredRecipes.add(recipe);
+
+            //if a requirement is not met, remove it from the list
+            Map<String, String[]> detailsOfRecipe = getDetails(recipe);
+            for(String requirement: requirements){
+                String[] requirementComponents = parseRequirement(requirement);
+                if(detailsOfRecipe.get(requirementComponents[0]) != null) {
+                    if (requirementComponents[1].contains("<")) {
+                        if (Integer.parseInt(detailsOfRecipe.get(requirementComponents[0])[0]) > Integer.parseInt(requirementComponents[2])) {
+                            filteredRecipes.remove(recipe);
+                        }
+                    }
+                    if (requirementComponents[1].contains(">")) {
+                        if (Integer.parseInt(detailsOfRecipe.get(requirementComponents[0])[0]) < Integer.parseInt(requirementComponents[2])) {
+                            filteredRecipes.remove(recipe);
+                        }
+                    }
+                    if (requirementComponents[1].contains("=")) {
+                        if (Integer.parseInt(detailsOfRecipe.get(requirementComponents[0])[0]) != Integer.parseInt(requirementComponents[2])) {
+                            filteredRecipes.remove(recipe);
+                        }
+                    }
+                }
+            }
+
+
+        }
+
+        return filteredRecipes;
+
+    }
+
+    public static String[] parseRequirement(String line) throws IllegalArgumentException {
+        // Pattern: [any text] [comparator] [integer] [any text]
+        //Pattern pattern = Pattern.compile("^(.*?)\\s*(<|>|=|<=|>=|!=)\\s*(.+)$");
+        Pattern pattern = Pattern.compile("^(.*?)\\s*(<|>|=|<=|>=|!=)\\s*(\\d+)\\s*(\\w+)?\\s*$");
+        Matcher matcher = pattern.matcher(line);
+
+        if (matcher.matches()) {
+            String name = matcher.group(1).trim();
+            String comparator = matcher.group(2).trim();
+            String value = matcher.group(3).trim();
+            String unit = matcher.group(4);
+            return new String[]{name, comparator, value, unit};
+        } else {
+            throw new IllegalArgumentException("Invalid format: '" + line + "'");
+        }
+    }
+
+    //get the recipe details from a file
+    public static Map<String, String[]> getDetails(File file){
+        Map<String, String[]> details = new HashMap<>();
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            String line = reader.readLine();
+            Boolean startStoring = false;
+            while ((line = reader.readLine()) != null) {
+                //System.out.println(line);
+                //start storing the rest of the lines after "Recipe Details" marker is hit
+                if(startStoring && !line.equals("")){
+                    //Pattern pattern = Pattern.compile("^(.*?)\\s*:\\s*(\\d+)\\s*(\\w+)(?:\\s+(\\d+)\\s*(\\w+))?\\s*$");
+                    Pattern pattern = Pattern.compile("^(.*?)\\s*:\\s*(\\d+)(?:\\s*(\\w+))?(?:\\s+(\\d+)\\s*(\\w+))?\\s*$");
+                    Matcher matcher = pattern.matcher(line);
+
+                    if (matcher.matches()) {
+                        String name = matcher.group(1).trim();
+                        String value = matcher.group(2).trim();
+                        String unit = matcher.group(3) != null ? matcher.group(3).trim() : "";
+                        String value2 = matcher.group(4) != null ? matcher.group(4).trim() : "";
+                        String unit2 = matcher.group(5) != null ? matcher.group(5) : "";
+
+                        //System.out.println(name + value + unit + value2 + unit2);
+
+                        if(unit.contains("hr") || unit.contains("hour")){
+                            Integer convertedValue = Integer.parseInt(value)*60;
+                            if(!value2.equals("")){
+                                convertedValue = convertedValue + Integer.parseInt(value2);
+                            }
+                            value = convertedValue.toString();
+                            unit = "mins";
+                        }
+                        String[] valueWithUnit = {value, unit};
+                        details.put(name, valueWithUnit);
+                    } //else {
+                        //System.out.println("No match for: " + line);
+                    //}
+                    //System.out.println("put " + info[0] + " with " + info[1]);
+                }
+                if(line.contains("Recipe Details")){
+                    startStoring = true;
+                }
+            }
+            //System.out.println(ingredients);
+            reader.close();
+        } catch (IOException e){
+            System.out.println("Error reading file: " + e);
+        }
+        return details;
     }
 
     /**

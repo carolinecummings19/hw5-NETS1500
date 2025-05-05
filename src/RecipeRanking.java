@@ -7,11 +7,14 @@ public class RecipeRanking {
     private List<String> ingredientsMissing;
     private List<String> ingredientsUnused;
 
-    public RecipeRanking(String name, List<String> ingredientsMatching, List<String> ingredientsMissing, List<String> ingredientsUnused){
+    private Map<String, String[]> recipeDetails;
+
+    public RecipeRanking(String name, List<String> ingredientsMatching, List<String> ingredientsMissing, List<String> ingredientsUnused, Map<String, String[]> recipeDetails){
         this.name = name;
         this.ingredientsMatching = ingredientsMatching;
         this.ingredientsMissing = ingredientsMissing;
         this.ingredientsUnused = ingredientsUnused;
+        this.recipeDetails = recipeDetails;
     }
 
     public String getName(){
@@ -30,6 +33,8 @@ public class RecipeRanking {
         return ingredientsUnused;
     }
 
+    public Map<String, String[]> getRecipeDetails(){return recipeDetails;}
+
     public int getNumMatching(){
         return ingredientsMatching.size();
     }
@@ -41,6 +46,7 @@ public class RecipeRanking {
     public int getNumUnused(){
         return ingredientsUnused.size();
     }
+
 
     public Double calculateScore(){
         //calculating the score based on the ratio of number of matching, missing, and unused ingredients

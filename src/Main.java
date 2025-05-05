@@ -5,6 +5,8 @@ import org.jsoup.select.Elements;
 import java.io.File;
 import java.lang.reflect.Array;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -96,6 +98,15 @@ public class Main {
                     System.out.println("Invalid selection. Skipping dietary restrictions.");
             }
         }
+        System.out.println("Would you like to filter by recipe details such as prep time, total time, and servings? (y/n)");
+        answer = scanner.nextLine().toLowerCase();
+        String[] requirements = null;
+        if(answer.equals("yes") || answer.equals("y")){
+            System.out.println("What would you like to filter? Please separate all with a comma\n    For example: Total Time < 30 mins,Servings > 4");
+            answer = scanner.nextLine();
+            requirements = answer.split(",");
+        }
+
 
         System.out.println("What ingredients would you like to use?\nPlease separate each ingredient with a comma");
         String ingredients = scanner.nextLine();
@@ -111,7 +122,16 @@ public class Main {
             System.out.println(" - " + ingredient);
         }
 
-        HashMap<RecipeRanking, Double> rankedRecipes = RecipeScraper.rankRecipesByIngredients(Arrays.asList(ingredientList), dietChosen);
+        List<File> recipesWithRequirements = null;
+        if (requirements != null) {
+            System.out.println("And that match the criteria: ");
+            for(String requirement: requirements){
+                System.out.println(" - " + requirement);
+            }
+            recipesWithRequirements = RecipeScraper.filterRecipeDetails(Arrays.asList(requirements), dietChosen);
+        }
+
+        HashMap<RecipeRanking, Double> rankedRecipes = RecipeScraper.rankRecipesByIngredients(Arrays.asList(ingredientList), dietChosen, recipesWithRequirements);
 
 
         List<Map.Entry<RecipeRanking, Double>> sorted = new ArrayList<>(rankedRecipes.entrySet());
@@ -122,9 +142,14 @@ public class Main {
         int count = 0;
         for (Map.Entry<RecipeRanking, Double> entry : sorted) {
             if (count++ >= 30) break;
-            System.out.println(count + ". " + entry.getKey().getName() + " -> " + entry.getValue());
+            System.out.println("\n" + count + ". " + entry.getKey().getName() + " -> " + entry.getValue());
+            for(String recipeDetail: entry.getKey().getRecipeDetails().keySet()){
+                System.out.println(" - " + recipeDetail + ": " + entry.getKey().getRecipeDetails().get(recipeDetail)[0] + " " + entry.getKey().getRecipeDetails().get(recipeDetail)[1]);
+            }
             System.out.println("Ingredients missing: ");
-            printList(entry.getKey().getIngredientsMissing());
+            for(String ingredient: entry.getKey().getIngredientsMissing()){
+                System.out.println(ingredient);
+            }
         }
 
         //Recipe details -- prep time, cook time, and servings
@@ -173,7 +198,42 @@ public class Main {
         System.out.println("Unused ingredients" + ingredientsUnused);
 
          */
+        /*
+        File testFile = new File("/Users/ashleytang/Documents/NETS 1500/hw5-NETS1500/recipes/vegan/ABC Pudding - Avocado, Banana, Chocolate Delight Recipe.txt");
+        //if a requirement is not met, remove it from the list
+        Map<String, String[]> detailsOfRecipe = RecipeScraper.getDetails(testFile);
+        System.out.println("got past getting all details");
+        String[] requirements = {"Prep Time < 30 minutes", "Servings > 7"};
+        for(String requirement: requirements) {
+            String[] requirementComponents = RecipeScraper.parseRequirement(requirement);
+            System.out.println(requirementComponents[0] + " " + requirementComponents[1] + " " + requirementComponents[2] + " " + requirementComponents[3]);
+            if (requirementComponents[1].contains("<")) {
+                if (Integer.parseInt(detailsOfRecipe.get(requirementComponents[0])[0]) > Integer.parseInt(requirementComponents[2])) {
+                    System.out.println("Recipe violates " + requirement);
+                } else{
+                    System.out.println("Passed " + requirement);
+                }
+            }
+            if (requirementComponents[1].contains(">")) {
+                if (Integer.parseInt(detailsOfRecipe.get(requirementComponents[0])[0]) < Integer.parseInt(requirementComponents[2])) {
+                    System.out.println("Recipe violates " + requirement);
+                }else{
+                    System.out.println("Passed " + requirement);
+                }
+            }
+            if (requirementComponents[1].contains("=")) {
+                if (Integer.parseInt(detailsOfRecipe.get(requirementComponents[0])[0]) != Integer.parseInt(requirementComponents[2])) {
+                    System.out.println("Recipe violates " + requirement);
+                }else{
+                    System.out.println("Passed " + requirement);
+                }
+            }
+        }
+
+         */
+
     }
+
 
     public static void printList(List<String> list){
         for(String string: list){
