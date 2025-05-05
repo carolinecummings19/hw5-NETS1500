@@ -14,6 +14,9 @@ public class RecipeInterface extends JFrame {
     private JTextField ingredientsField;
     private JPanel resultsPanel;
 
+    /**
+     * Main function for GUI layout
+     */
     public RecipeInterface() {
         setTitle("Recipe Generator");
         setSize(700, 700);
@@ -85,6 +88,10 @@ public class RecipeInterface extends JFrame {
             }
         });
     }
+
+    /**
+     * Calls the backend to retrieve recipes and formats in panel.
+     */
     private void generateRecipes() {
         String selectedDiet = dietComboBox.getSelectedItem().toString().toLowerCase();
         if (selectedDiet.equals("none")) selectedDiet = null;
@@ -180,6 +187,12 @@ public class RecipeInterface extends JFrame {
         resultsPanel.repaint();
     }
 
+    /**
+     * Formats each recipe based with the details at the top, the text of the recipe
+     * file and the missing ingredients at the end.
+     * @param entry
+     * @return
+     */
     private String buildHtmlDetails(Map.Entry<RecipeRanking, Double> entry) {
         StringBuilder details = new StringBuilder("<html>");
 
@@ -205,6 +218,10 @@ public class RecipeInterface extends JFrame {
         return details.toString();
     }
 
+    /**
+     * Main method to run.
+     * @param args
+     */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             RecipeInterface gui = new RecipeInterface();

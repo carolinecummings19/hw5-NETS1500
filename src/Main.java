@@ -1,13 +1,5 @@
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
 import java.io.File;
-import java.lang.reflect.Array;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) {
@@ -138,7 +130,7 @@ public class Main {
         sorted.sort((e1, e2) -> Double.compare(e2.getValue(), e1.getValue()));
 
 
-        // Print the top 30 results
+        // Print the top 10 results
         int count = 0;
         for (Map.Entry<RecipeRanking, Double> entry : sorted) {
             if (count++ >= 10) break;
@@ -152,94 +144,6 @@ public class Main {
             for(String ingredient: entry.getKey().getIngredientsMissing()){
                 System.out.println(ingredient);
             }
-        }
-
-        //Recipe details -- prep time, cook time, and servings
-        //Document recipePage = RecipeScraper.fetchPage("https://www.allrecipes.com/pickle-bacon-chopped-bagels-recipe-11719063");
-        //Elements cookingTime = recipePage.select("div[class=mm-recipes-details__content]");
-        //Elements cookingTime = recipePage.select("div[class=mm-recipes-details__item]");
-        /*
-        if (cookingTime != null) {
-            for (Element fact : cookingTime) {
-                if (fact.hasText()) {
-                    System.out.println(fact.text());
-                }
-            }
-        } else {
-            System.out.println("not found");
-        }
-         */
-
-        //TESTING A SINGLE FILE
-        /*
-        File testFile = new File("/Users/ashleytang/Documents/NETS 1500/hw5-NETS1500/recipes/vegan/ABC Pudding - Avocado, Banana, Chocolate Delight Recipe.txt");
-        List<String> ingredientsInTestRecipe = RecipeScraper.getIngredients(testFile);
-        System.out.println(ingredientsInTestRecipe.size() + " ingredients: " + ingredientsInTestRecipe);
-
-        List<String> desiredIngredients = new ArrayList<>();
-        desiredIngredients.add("avocado");
-        desiredIngredients.add("peach");
-        List<String> ingredientsMatching = desiredIngredients.stream()
-                .filter(full -> ingredientsInTestRecipe.stream().anyMatch(containing -> containing.contains(full)))
-                .collect(Collectors.toList());
-
-        System.out.println("Matching ingredients" + ingredientsMatching);
-
-        //find all ingredients that the user is missing
-        List<String> ingredientsMissing = ingredientsInTestRecipe.stream()
-                .filter(item -> desiredIngredients.stream().noneMatch(item::contains))
-                .collect(Collectors.toList());
-
-        System.out.println("Missing ingredients" + ingredientsMissing);
-
-        //find all ingredients that the user lists but the recipe does not use
-        List<String> ingredientsUnused = desiredIngredients.stream()
-                .filter(full -> ingredientsInTestRecipe.stream().noneMatch(containing -> containing.contains(full)))
-                .collect(Collectors.toList());
-
-        System.out.println("Unused ingredients" + ingredientsUnused);
-
-         */
-        /*
-        File testFile = new File("/Users/ashleytang/Documents/NETS 1500/hw5-NETS1500/recipes/vegan/ABC Pudding - Avocado, Banana, Chocolate Delight Recipe.txt");
-        //if a requirement is not met, remove it from the list
-        Map<String, String[]> detailsOfRecipe = RecipeScraper.getDetails(testFile);
-        System.out.println("got past getting all details");
-        String[] requirements = {"Prep Time < 30 minutes", "Servings > 7"};
-        for(String requirement: requirements) {
-            String[] requirementComponents = RecipeScraper.parseRequirement(requirement);
-            System.out.println(requirementComponents[0] + " " + requirementComponents[1] + " " + requirementComponents[2] + " " + requirementComponents[3]);
-            if (requirementComponents[1].contains("<")) {
-                if (Integer.parseInt(detailsOfRecipe.get(requirementComponents[0])[0]) > Integer.parseInt(requirementComponents[2])) {
-                    System.out.println("Recipe violates " + requirement);
-                } else{
-                    System.out.println("Passed " + requirement);
-                }
-            }
-            if (requirementComponents[1].contains(">")) {
-                if (Integer.parseInt(detailsOfRecipe.get(requirementComponents[0])[0]) < Integer.parseInt(requirementComponents[2])) {
-                    System.out.println("Recipe violates " + requirement);
-                }else{
-                    System.out.println("Passed " + requirement);
-                }
-            }
-            if (requirementComponents[1].contains("=")) {
-                if (Integer.parseInt(detailsOfRecipe.get(requirementComponents[0])[0]) != Integer.parseInt(requirementComponents[2])) {
-                    System.out.println("Recipe violates " + requirement);
-                }else{
-                    System.out.println("Passed " + requirement);
-                }
-            }
-        }
-
-         */
-
-    }
-
-
-    public static void printList(List<String> list){
-        for(String string: list){
-            System.out.println(" - " + string);
         }
     }
 
@@ -256,7 +160,13 @@ public class Main {
 
     }
 
+    /**
+     * Splits user input to get the ingredients.
+     * @param answer
+     * @return
+     */
     public static String[] splitIntoParts(String answer){
+        if (answer.length() == 0) return null;
         String[] answerComponents = answer.split(",|;|and");
 
         for(int i = 0; i < answerComponents.length; i++){
@@ -266,7 +176,6 @@ public class Main {
             if(answerComponents[i].charAt(answerComponents[i].length() -1) == ' '){
                 answerComponents[i] = answerComponents[i].substring(0,answerComponents[i].length()-1);
             }
-//            System.out.println(answerComponents[i]);
         }
         return answerComponents;
     }

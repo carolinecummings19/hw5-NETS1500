@@ -8,11 +8,9 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 public class RecipeScraper {
-    /*
+    /**
      * Fetches and returns the Document for a given URL
      */
     public static Document fetchPage(String url) {
@@ -227,6 +225,11 @@ public class RecipeScraper {
         return rankedRecipes;
     }
 
+    /**
+     * Get ingredients section of txt file and put them into a list.
+     * @param file
+     * @return
+     */
     public static List<String> getIngredients(File file){
         List<String> ingredients = new ArrayList<>();
         try {
@@ -247,6 +250,11 @@ public class RecipeScraper {
         return ingredients;
     }
 
+    /**
+     * Stores entire txt file into a string (for printing purposes)
+     * @param file
+     * @return
+     */
     public static String getFullRecipe(File file) {
         StringBuilder fullRecipe = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -260,7 +268,12 @@ public class RecipeScraper {
         return fullRecipe.toString();
     }
 
-
+    /**
+     * Traverse recipes and filter based on recipe details.
+     * @param requirements
+     * @param diet
+     * @return
+     */
     public static List<File> filterRecipeDetails(List<String> requirements, String diet){
         List<File> filteredRecipes = new ArrayList<>();
         // Replace with path: /Users/ashleytang/Documents/NETS 1500/hw5-NETS1500/recipes
@@ -317,6 +330,12 @@ public class RecipeScraper {
 
     }
 
+    /**
+     * Parsing the user input.
+     * @param line
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static String[] parseRequirement(String line) throws IllegalArgumentException {
         // Pattern: [any text] [comparator] [integer] [any text]
         //Pattern pattern = Pattern.compile("^(.*?)\\s*(<|>|=|<=|>=|!=)\\s*(.+)$");
@@ -334,7 +353,11 @@ public class RecipeScraper {
         }
     }
 
-    //get the recipe details from a file
+    /**
+     * Returns the prep time, cook time, total time, and servings from recipe.
+     * @param file
+     * @return
+     */
     public static Map<String, String[]> getDetails(File file){
         Map<String, String[]> details = new HashMap<>();
         try {
