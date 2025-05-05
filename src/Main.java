@@ -141,11 +141,13 @@ public class Main {
         // Print the top 30 results
         int count = 0;
         for (Map.Entry<RecipeRanking, Double> entry : sorted) {
-            if (count++ >= 30) break;
+            if (count++ >= 10) break;
             System.out.println("\n" + count + ". " + entry.getKey().getName() + " -> " + entry.getValue());
             for(String recipeDetail: entry.getKey().getRecipeDetails().keySet()){
                 System.out.println(" - " + recipeDetail + ": " + entry.getKey().getRecipeDetails().get(recipeDetail)[0] + " " + entry.getKey().getRecipeDetails().get(recipeDetail)[1]);
             }
+            String fullRecipeText = entry.getKey().getRecipe();
+            System.out.println(fullRecipeText);
             System.out.println("Ingredients missing: ");
             for(String ingredient: entry.getKey().getIngredientsMissing()){
                 System.out.println(ingredient);

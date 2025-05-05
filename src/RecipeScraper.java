@@ -8,6 +8,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class RecipeScraper {
     /*
@@ -169,7 +171,8 @@ public class RecipeScraper {
      */
     public static HashMap<RecipeRanking, Double> rankRecipesByIngredients(List<String> ingredientList, String diet, List<File> specificRecipes){
         HashMap<RecipeRanking, Double> rankedRecipes = new HashMap<>();
-        String parentDir = "/Users/ashleytang/Documents/NETS 1500/hw5-NETS1500/recipes";
+        // Replace with path: /Users/ashleytang/Documents/NETS 1500/hw5-NETS1500/recipes
+        String parentDir = "/Users/carolinesmacbookair/Desktop/NETS 1500/HW5/recipes";
         File[] recipesForDiet;
         if(specificRecipes != null){
             recipesForDiet = specificRecipes.toArray(new File[0]);
@@ -189,7 +192,8 @@ public class RecipeScraper {
         }
 
         //for each recipe, rank the recipes in terms of how many ingredients match from the list
-        for(File recipe: recipesForDiet){
+        for(File recipe: recipesForDiet) {
+            String fullRecipe = getFullRecipe(recipe);
 
             //keep a count for the number of matching ingredients
             //int numMatchingIngredients = 0;
@@ -216,7 +220,7 @@ public class RecipeScraper {
                     .collect(Collectors.toList());
 
             Map<String, String[]> recipeDetails = getDetails(recipe);
-            RecipeRanking recipeRank = new RecipeRanking(recipe.getName(), ingredientsMatching, ingredientsMissing, ingredientsUnused, recipeDetails);
+            RecipeRanking recipeRank = new RecipeRanking(recipe.getName(), fullRecipe, ingredientsMatching, ingredientsMissing, ingredientsUnused, recipeDetails);
             rankedRecipes.put(recipeRank, recipeRank.calculateScore());
         }
 
@@ -243,10 +247,24 @@ public class RecipeScraper {
         return ingredients;
     }
 
+    public static String getFullRecipe(File file) {
+        StringBuilder fullRecipe = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null && !line.contains("Recipe Details")) {
+                fullRecipe.append(line).append("\n");
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading file: " + e);
+        }
+        return fullRecipe.toString();
+    }
+
 
     public static List<File> filterRecipeDetails(List<String> requirements, String diet){
         List<File> filteredRecipes = new ArrayList<>();
-        String parentDir = "/Users/ashleytang/Documents/NETS 1500/hw5-NETS1500/recipes";
+        // Replace with path: /Users/ashleytang/Documents/NETS 1500/hw5-NETS1500/recipes
+        String parentDir = "/Users/carolinesmacbookair/Desktop/NETS 1500/HW5/recipes";
         File[] recipesForDiet;
 
         if(diet != null) {

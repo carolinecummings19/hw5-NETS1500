@@ -3,14 +3,16 @@ import java.util.Map;
 
 public class RecipeRanking {
     private String name;
+    private String recipe;
     private List<String> ingredientsMatching;
     private List<String> ingredientsMissing;
     private List<String> ingredientsUnused;
 
     private Map<String, String[]> recipeDetails;
 
-    public RecipeRanking(String name, List<String> ingredientsMatching, List<String> ingredientsMissing, List<String> ingredientsUnused, Map<String, String[]> recipeDetails){
+    public RecipeRanking(String name, String recipe, List<String> ingredientsMatching, List<String> ingredientsMissing, List<String> ingredientsUnused, Map<String, String[]> recipeDetails){
         this.name = name;
+        this.recipe = recipe;
         this.ingredientsMatching = ingredientsMatching;
         this.ingredientsMissing = ingredientsMissing;
         this.ingredientsUnused = ingredientsUnused;
@@ -19,6 +21,9 @@ public class RecipeRanking {
 
     public String getName(){
         return name;
+    }
+    public String getRecipe(){
+        return recipe;
     }
 
     public List<String> getIngredientsMatching(){
