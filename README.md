@@ -47,13 +47,15 @@ src/
   Enter a list of comma-separated ingredients you want to use.
 
 * **Time + Servings Filtering**
-  Set an upper limit on total time and minimum number of servings.
+  Set an upper limit on total time and minimum number of servings, both are optional.
 
 * **Recipe Ranking**
   Finds and ranks recipes by how well they match your inputs. Uses TF-IDF vector concept and cosine similarities. The vectors used are <1,...,1,1,....,1,0,...,0> and <1,...,1,0,...,0,1,...,1> where the size of the vectors is equal to the total number of ingredients in both recipes. Using the rule of cosine similarities, this can be simplified to (number of matching)/(sqrt(matching + number of unused) + sqrt(number of matching + number of missing)). The closer this value is to 1, the more similar the recipe is to the user's query. 
 
 * **Expandable Results**
   Each result can be expanded/collapsed to view the full recipe, directions, nutrition facts, and missing ingredients.
+
+  We used **Physical Networks (Internet)** and **Document Search (aka Information Retrieval)**. 
 
 ---
 
@@ -93,3 +95,13 @@ Servings: 4
 ## Future Plans
 
 In future iterations of this project, we would like to pull more recipes and have more options for the user. Additionally, we could also add the options to list ingredients to avoid (like potential allergens) and only output recipes without those ingredients. 
+
+---
+
+## Who Did What
+
+Caroline Cummings implemented the recipe scraping functionality and did the initial scraping of recipes and stored them locally in the `recipes` folder. She also developed and desgined the GUI which calls the backend and formats the matched recipes. 
+
+Ashley Tang developed the backend of matching recipes to ingredients using cosine similarity. She also helped scrape the recipe details so that we could also constrain the search by serving size and total time to make and created the user experience in the console.
+
+Both worked on the [Instruction Manual](https://docs.google.com/document/d/1uyxhOcutib2n58J2glg7Q1mgjaB12idcvjejUA-5hOs/edit?usp=sharing). 
