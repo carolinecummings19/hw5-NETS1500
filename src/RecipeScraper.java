@@ -169,7 +169,7 @@ public class RecipeScraper {
      */
     public static HashMap<RecipeRanking, Double> rankRecipesByIngredients(List<String> ingredientList, String diet, List<File> specificRecipes){
         HashMap<RecipeRanking, Double> rankedRecipes = new HashMap<>();
-        // Replace with path: /Users/ashleytang/Documents/NETS 1500/hw5-NETS1500/recipes
+        // Replace with your own path
         String parentDir = "/Users/carolinesmacbookair/Desktop/NETS 1500/HW5/recipes";
         File[] recipesForDiet;
         if(specificRecipes != null){
@@ -276,7 +276,7 @@ public class RecipeScraper {
      */
     public static List<File> filterRecipeDetails(List<String> requirements, String diet){
         List<File> filteredRecipes = new ArrayList<>();
-        // Replace with path: /Users/ashleytang/Documents/NETS 1500/hw5-NETS1500/recipes
+        // Replace with path to recipes
         String parentDir = "/Users/carolinesmacbookair/Desktop/NETS 1500/HW5/recipes";
         File[] recipesForDiet;
 

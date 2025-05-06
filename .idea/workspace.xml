@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8651b1a6-e66a-47b9-96db-3ccdf8cc5575" name="Changes" comment="" />
+    <list default="true" id="8651b1a6-e66a-47b9-96db-3ccdf8cc5575" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/readme.txt" beforeDir="false" afterPath="$PROJECT_DIR$/readme.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/RecipeScraper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/RecipeScraper.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -83,6 +88,7 @@
       <workItem from="1746322187257" duration="18553000" />
       <workItem from="1746413213690" duration="6624000" />
       <workItem from="1746488234886" duration="1013000" />
+      <workItem from="1746553798741" duration="418000" />
     </task>
     <servers />
   </component>

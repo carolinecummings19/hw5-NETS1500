@@ -15,6 +15,12 @@ We then use these `.txt` files to search for the user-inputted ingredients and p
 
 ## To Run
 
+Before running ensure that the code can find the path to the `recipes folder`. In lines 280 and 173 of the `RecipeScraper.java` file change to the path on your computer:
+```
+// Replace with path to recipes something like:
+String parentDir = "/Users/.../HW5/recipes";
+```
+
 The GUI can be run using the `RecipeInterface.java` file by clicking the green triangle run button in IntelliJ. 
 
 You can also run the main method in `Main.java` to see the same functionality in the console. 
