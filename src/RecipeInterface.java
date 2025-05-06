@@ -19,21 +19,29 @@ public class RecipeInterface extends JFrame {
      */
     public RecipeInterface() {
         setTitle("Recipe Generator");
-        setSize(700, 700);
+        setSize(700, 1000);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
         // Main panel with padding
         JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new GridLayout(2, 1));
+        mainPanel.setLayout(new BorderLayout());
         mainPanel.setBorder(new EmptyBorder(20, 20, 20, 20));  // top, left, bottom, right padding
         mainPanel.setBackground(new Color(240, 248, 255)); // light blue background
 
         // Top panel
         JPanel topPanel = new JPanel();
-        topPanel.setLayout(new GridLayout(2, 1));
+        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
         topPanel.setBackground(new Color(240, 248, 255)); // match background
         topPanel.setBorder(new EmptyBorder(0, 40, 0, 40));
+
+        JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JLabel titleLabel = new JLabel("Recipe Generator \uD83C\uDF7D️", SwingConstants.LEFT);
+        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 20));
+        titlePanel.setBackground(new Color(240, 248, 255));
+        titlePanel.add(titleLabel);
+        titlePanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 10, 5));
+        topPanel.add(titlePanel, BorderLayout.NORTH);
 
         // Input panel
         JPanel inputPanel = new JPanel();
@@ -47,35 +55,49 @@ public class RecipeInterface extends JFrame {
 
         inputPanel.add(new JLabel("Max Total Time (mins):"));
         maxTimeField = new JTextField();
+        maxTimeField.setMargin(new Insets(0, 5, 0, 5));
         inputPanel.add(maxTimeField);
-        maxTimeField.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        maxTimeField.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Color.GRAY), // outer border (optional)
+                BorderFactory.createEmptyBorder(2, 4, 2, 4) // inner padding
+        ));
 
         inputPanel.add(new JLabel("Min Servings:"));
         minServingsField = new JTextField();
         inputPanel.add(minServingsField);
-        minServingsField.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        minServingsField.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Color.GRAY), // outer border (optional)
+                BorderFactory.createEmptyBorder(2, 4, 2, 4) // inner padding
+        ));
 
         inputPanel.add(new JLabel("Ingredients (comma-separated):"));
         ingredientsField = new JTextField();
         inputPanel.add(ingredientsField);
-        ingredientsField.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        ingredientsField.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Color.GRAY), // outer border (optional)
+                BorderFactory.createEmptyBorder(2, 4, 2, 4) // inner padding
+        ));
 
-        topPanel.add(inputPanel, BorderLayout.NORTH);
+        topPanel.add(inputPanel, BorderLayout.CENTER);
 
         // Button panel (centered)
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        buttonPanel.setBackground(new Color(240, 248, 255)); // match background
         JButton generateButton = new JButton("Generate Recipes");
-        generateButton.setBackground(new Color(100, 149, 237));
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 5, 0));
+        buttonPanel.setBackground(new Color(240, 248, 255)); // match background
+        buttonPanel.setOpaque(true);
         buttonPanel.add(generateButton);
         topPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-        mainPanel.add(topPanel);
+        mainPanel.add(topPanel, BorderLayout.NORTH);
 
         // Results area
         resultsPanel = new JPanel();
-        resultsPanel.setLayout(new BoxLayout(resultsPanel, BoxLayout.Y_AXIS));
+        resultsPanel.setOpaque(true);
+        resultsPanel.setBackground(new Color(240, 248, 255));
         JScrollPane scrollPane = new JScrollPane(resultsPanel);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+        scrollPane.setBackground(new Color(240, 248, 255));
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
         add(mainPanel);
@@ -93,7 +115,7 @@ public class RecipeInterface extends JFrame {
      * Calls the backend to retrieve recipes and formats in panel.
      */
     private void generateRecipes() {
-        String selectedDiet = dietComboBox.getSelectedItem().toString().toLowerCase();
+        String selectedDiet = dietComboBox.getSelectedItem().toString().toLowerCase().replaceAll("-", "");
         if (selectedDiet.equals("none")) selectedDiet = null;
 
         int maxTime = -1;
@@ -134,6 +156,7 @@ public class RecipeInterface extends JFrame {
 
         resultsPanel.removeAll();
         resultsPanel.setLayout(new BoxLayout(resultsPanel, BoxLayout.Y_AXIS));
+        resultsPanel.setBorder(BorderFactory.createEtchedBorder());
 
         int count = 0;
         for (Map.Entry<RecipeRanking, Double> entry : sorted) {
@@ -144,7 +167,7 @@ public class RecipeInterface extends JFrame {
             JPanel recipePanel = new JPanel();
             recipePanel.setLayout(new BorderLayout());
             recipePanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-            recipePanel.setBackground(new Color(255, 255, 255));
+            recipePanel.setBackground(new Color(245, 245, 245));
 
             JToggleButton toggleButton = new JToggleButton(recipeName);
             JPanel detailPanel = new JPanel();
@@ -159,7 +182,7 @@ public class RecipeInterface extends JFrame {
             detailPane.setCaretPosition(0);  // scroll to top
 
             JScrollPane detailScroll = new JScrollPane(detailPane);
-            detailScroll.setPreferredSize(new Dimension(500, 200));
+            detailScroll.setPreferredSize(new Dimension(500, 350));
             detailPanel.add(detailScroll);
 
             // First recipe opened by default
