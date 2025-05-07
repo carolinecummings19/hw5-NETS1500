@@ -13,7 +13,7 @@ public class Main {
               //  System.out.println("Recipes folder is empty or does not exist. Starting scrape...");
 
             for(String subfolderPath : subfolderPaths){
-                File subfolder = new File("recipes/vegan");
+                File subfolder = new File("recipes/" + subfolderPath);
 
                 if(!subfolder.exists() || subfolder.listFiles() == null || subfolder.listFiles().length == 0) {
                     if (subfolderPath.contains("vegan")) {
