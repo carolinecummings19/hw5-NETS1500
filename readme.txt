@@ -26,6 +26,7 @@ Details (cook time, prep time, servings, etc) and populate a `.txt` for each rec
 We then use these `.txt` files to search for the user-inputted ingredients and preferences.
 
 ## To Run ##
+You must run the main method in `Main.java` to scrape the recipes.
 
 Before running ensure that the code can find the path to the `recipes folder`. In lines 280
 and 173 of the `RecipeScraper.java` file change to the path on your computer:
